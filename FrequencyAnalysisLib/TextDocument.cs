@@ -9,11 +9,7 @@ namespace FrequencyAnalysisLib
 {
     public class TextDocument : Document<string>
     {
-        public TextDocument(string path) : base(path)
-        {
-
-        }
-        public TextDocument() : base() { }
+        public TextDocument(string path) : base(path) { }
 
         public override bool ReloadContext()
         {

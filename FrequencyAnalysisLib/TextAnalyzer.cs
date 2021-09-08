@@ -8,12 +8,9 @@ using System.Threading;
 
 namespace FrequencyAnalysisLib
 {
-    public class FrequencyAnalyzer
+    public static class TextAnalyzer
     {
-
-
-
-        public Dictionary<string, int> GetDictionaryOfTheTripletsNumber(Document<string> document)
+        public static Dictionary<string, int> AnalyzeTripletFrequency(this Document<string> document)
         {
             if (document.IsValid)
             {
@@ -26,22 +23,37 @@ namespace FrequencyAnalysisLib
                 // Создаем словарь. Ключ - триплет, значение - количество повторений в документе
                 ConcurrentDictionary<string, int> frequencyOfValues = new ConcurrentDictionary<string, int>();
 
+                var charContent = document.Content.ToCharArray();
                 // Получаем количество всех триплетов
-                var numOfTriplets = document.Content.Length - 2;
+                var numOfTriplets = charContent.Length - 2;
                 // Получаем нужное количество потоков по количеству триплетов
-                int numOfThreads = (numOfTriplets / 100) + 1;
+                int numOfTasks = (numOfTriplets / 100) + 1;
 
 
                 // Организуем многопоточность
-                Thread[] threads = new Thread[numOfThreads];
+                int CountofWorkThreads; // Переменная для хранения значения максимального количества потоков в пуле.
+                int CountofImputOutputThreads; // Переменная для хранения количества потоков ввода-вывода в пуле.
+                ThreadPool.GetMaxThreads(out CountofWorkThreads, out CountofImputOutputThreads); // Инициируем переменные.
+                Thread[] threads = new Thread[numOfTasks];
 
-
-                // Добавляем триплеты в словарь
-                for (int i = 0; i < numOfThreads; i++)
+                void AddAllTripletsFromString(string str)
                 {
-                    threads[i] = new Thread(new ParameterizedThreadStart(AddAllTripletsFromString));
-                    threads[i].Start();
+                    for (int i = 0; i < str.Length - 2; i++)
+                    {
+                        string triplet = (str[i] + str[i + 1] + str[i + 2]).ToString();
+                        frequencyOfValues.AddOrUpdate(triplet, 1, (key, oldValue) => oldValue + 1);
+                    }
+                    
                 }
+
+                Task[] tasks = new Task[numOfTasks];
+                // Добавляем триплеты в словарь
+                for (int i = 0; i < tasks.Length; i++)
+                {
+                    tasks[i] = Task.Run(() => AddAllTripletsFromString("123"));
+                }
+
+                Task.WaitAll(tasks);
 
                 return new Dictionary<string, int>(frequencyOfValues);
             }
@@ -49,11 +61,6 @@ namespace FrequencyAnalysisLib
             return null;
         }
 
-        private void AddAllTripletsFromString(object str)
-        {
-
-
-        }
 
         // Класс - параметр для передачи в поток
         private class DictionaryAndString

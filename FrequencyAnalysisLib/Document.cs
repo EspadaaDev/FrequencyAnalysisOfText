@@ -34,7 +34,6 @@ namespace FrequencyAnalysisLib
         {
             Path = path;
         }
-        public Document() { }
 
         // Публичные методы
         public abstract bool ReloadContext();

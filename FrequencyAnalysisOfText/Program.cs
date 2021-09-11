@@ -45,13 +45,15 @@ namespace FrequencyAnalysisOfText
             // Выводим максимум 10 триплетов и их повторений в консоль в порядке убывания
             foreach (var item in tripletsNumber)
             {
-                Console.WriteLine($"Triplet: {item.Key} | Num: {item.Value} ");
+                Console.Write($"{item.Key}");
 
                 index++;
                 if (index == 10)
                 {
+                    Console.Write("\n ");
                     break;
                 }
+                Console.Write(", ");
             }
 
             // Останавливаем таймер выполнения программы

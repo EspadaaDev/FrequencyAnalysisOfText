@@ -1,29 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.IO;
 
 namespace FrequencyAnalysisLib
 {
     public class TextDocument : Document<string>
     {
-        public TextDocument(string path) : base(path) { }
-
-        public override bool ReloadContext()
+        public TextDocument(string path) : base(path)
         {
-            return LoadContextFromFile(Path);
+            ReloadContent(path);
+        }
+        public TextDocument() { }
+
+        public override bool ReloadContent()
+        {
+            return LoadContentFromFile(Path);
         }
 
-        public override bool ReloadContext(string newPath)
+        public override bool ReloadContent(string newPath)
         {
             Path = newPath;
-            return LoadContextFromFile(Path);
+            return LoadContentFromFile(Path);
+        }
+
+        public override bool SetContent(string content)
+        {
+            if (content != null)
+            {
+                Content = content;
+                return true;
+            }
+            return false;
         }
 
         // Загрузка контента из текстового файла
-        private bool LoadContextFromFile(string pathToFile)
+        private bool LoadContentFromFile(string pathToFile)
         {
             Content = null;
 

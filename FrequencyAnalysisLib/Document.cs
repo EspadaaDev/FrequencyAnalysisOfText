@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FrequencyAnalysisLib
+﻿namespace FrequencyAnalysisLib
 {
     public abstract class Document<T>
     {
@@ -30,13 +23,15 @@ namespace FrequencyAnalysisLib
         }
 
         // Конструкторы
+        public Document() { }
         public Document(string path)
         {
             Path = path;
         }
 
         // Публичные методы
-        public abstract bool ReloadContext();
-        public abstract bool ReloadContext(string newPath);
+        public abstract bool ReloadContent();
+        public abstract bool ReloadContent(string newPath);
+        public abstract bool SetContent(string content);
     }
 }
